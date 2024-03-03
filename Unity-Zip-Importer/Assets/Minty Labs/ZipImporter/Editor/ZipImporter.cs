@@ -29,7 +29,7 @@ public class ZipImporter : EditorWindow {
         try {
             var wc = new WebClient();
             wc.Headers.Add("User-Agent", ProjectUserAgent);
-            _newVersionString = wc.DownloadString("https://raw.githubusercontent.com/Minty-Labs/Unity-Tools/Zip-Importer/main/Remote/version.txt");
+            _newVersionString = wc.DownloadString("https://raw.githubusercontent.com/Minty-Labs/Unity-Tools/main/Unity-Zip-Importer/Remote/version.txt");
             _updateAvailable = _newVersionString != Version;
             Debug.Log(LogPrefix + (_updateAvailable ? "Update Available" : "No Update Available"));
             wc.Dispose();
