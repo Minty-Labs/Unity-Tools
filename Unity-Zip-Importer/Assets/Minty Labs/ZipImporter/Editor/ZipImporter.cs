@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 
 public class ZipImporter : EditorWindow {
-    private const string Version = "1.0.0";
+    private const string Version = "1.0.1";
     private const string LogPrefix = "[<color=#9fffe3>ZipArchive Importer</color>] ";
     private static readonly string ProjectUserAgent = $"ZipArchive Importer/{Version} Internal UnityWebRequest";
     private int _pageNumber;

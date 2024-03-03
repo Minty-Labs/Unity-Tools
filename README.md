@@ -83,6 +83,12 @@
 </ul>
 
 <h1>Updates</h1>
+<b>2024-03-02: v1.0.1</b>
+<p>
+  <ul>
+    <li>Fixed URL for version checking</li>
+  </ul>
+</p>
 <b>2024-03-02: v1.0.0</b>
 <p>
   <ul>
