@@ -87,6 +87,5 @@
 <p>
   <ul>
     <li>Initial Release</li>
-    <li></li>
   </ul>
 </p>
