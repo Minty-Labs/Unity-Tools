@@ -63,6 +63,28 @@ public static class LanguageModel {
             default: return "Saved values file is from an older version, things may break or not work at all. Please save new values before loading values";
         }
     }
+
+    #endregion
+    
+    #region Camera Options
+    
+    public static string UseSceneCamera(int lang) {
+        switch (lang) {
+            case 1: return "シーンカメラビューを使用する";
+            case 2: return "씬 카메라 뷰 사용";
+            case 3: return "Использовать вид камеры сцены";
+            default: return "Use Scene Camera View";
+        }
+    }
+    
+    public static string CameraOptions(int lang) {
+        switch (lang) {
+            case 1: return "カメラオプション";
+            case 2: return "카메라 옵션";
+            case 3: return "Параметры камеры";
+            default: return "Camera Options";
+        }
+    }
     
     public static string SelectCamera(int lang) {
         switch (lang) {
@@ -108,7 +130,7 @@ public static class LanguageModel {
             default: return "Open Image Viewer?";
         }
     }
-
+    
     #endregion
     
     #region Resolution Options
@@ -315,7 +337,7 @@ public static class LanguageModel {
             case 1: return "更新を確認";
             case 2: return "업데이트를 확인";
             case 3: return "Проверить обновления";
-            default: return "Check for update";
+            default: return "Check for Update";
         }
     }
     
@@ -325,6 +347,15 @@ public static class LanguageModel {
             case 2: return "부스 페이지 열기";
             case 3: return "Открыть страницу \"Booth\"";
             default: return "Open Booth Page";
+        }
+    }
+    
+    public static string OpenGumroadPage(int lang) {
+        switch (lang) { 
+            case 1: return "Gumroadページを開く";
+            case 2: return "Gumroad 페이지 열기";
+            case 3: return "Открыть страницу \"Gumroad\"";
+            default: return "Open Gumroad Page";
         }
     }
     

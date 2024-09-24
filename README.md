@@ -10,7 +10,7 @@
     There are four image resolution size options. [Custom, Normal, VRChat, ChilloutVR]
     <ul>
       <li>Custom is self-explanatory</li>
-      <li>Normal is screen resolutions [480p, 720p, 1080p, 1440p, 4K, 8K]</li>
+      <li>Normal is screen resolutions [240p, 360p, 480p, 720p, 1080p, 1440p, 4K, 8K]</li>
       <li>VRChat has the image size that VRChat uses, but with larger scale options [1200x900]</li>
       <li>ChilloutVR has the image size that CVR uses, but with larger scale options [512x512]</li>
     </ul>
@@ -48,6 +48,16 @@
 </p>
 
 <h1>Updates</h1>
+<b>2024-09-24: v1.3.0</b>
+<p>
+  <ul>
+    <li>Added an option to use your Scene View as a camera</li>
+    <li>Added resolution presets: 240p & 360p</li>
+    <li>Small code/logic edits</li>
+    <li>Updated About page layout & links</li>
+    <li></li>
+  </ul>
+</p>
 <b>2024-03-02: v1.2.0</b>
 <p>
   <ul>

@@ -8,31 +8,32 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class SnapshotUtility : EditorWindow {
-    private const string Version = "1.2.0";
+    private const string Version = "1.3.0";
     private const string SaveFileVersion = "2";
     private const string LogPrefix = "[<color=#9fffe3>MintySnapshot Utility</color>] ";
     private static readonly string ProjectUserAgent = $"MintySnapshot Utility/{Version} Internal UnityWebRequest";
     private static bool _updateAvailable;
 
     private int _pageNumber;
-    
+
     private static int _languageSelected;
-    private readonly string[] _languageOptions = new string[4] { "English", "日本語", "한국인", "Русский" };
+    private readonly string[] _languageOptions = { "English", "日本語", "한국인", "Русский" };
 
     private int _resolutionSelected;
-    private readonly string[] _resolutionOptions = new string[4] { "Custom", "Normal", "VRChat", "ChilloutVR" };
+    private readonly string[] _resolutionOptions = { "Custom", "Standards", "VRChat", "ChilloutVR" };
 
     private int _standardResSelected;
-    private readonly string[] _standardResOptions = new string[6] { "480p", "720p", "1080p", "1440p (2K)", "2160p (4K)", "4320p (8K)" };
+    private readonly string[] _standardResOptions = { "240p", "360p", "480p", "720p", "1080p", "1440p (2K)", "2160p (4K)", "4320p (8K)" };
 
     private int _resolutionMultiplier = 1;
 
     private int _height = 1080, _width = 1920;
     private bool _isTransparent, _openFileDirectory, _openInDefaultImageViewer;
-    
+
     private static string _japaneseContributors, _koreanContributors, _russianContributors, _newVersionString;
 
     private static Camera _camera;
+    private static bool _useSceneCamera;
     private string _cameraNameFromScene;
 
     [MenuItem("Tools/Minty Labs/Snapshot Utility")]
@@ -77,13 +78,13 @@ public class SnapshotUtility : EditorWindow {
         var defaultBgColor = GUI.backgroundColor;
         EditorStyles.label.richText = true;
         GUILayout.Space(12f);
-        var style = new GUIStyle(GUI.skin.label) {alignment = TextAnchor.MiddleCenter, richText = true, fixedHeight = 40f};
+        var style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, richText = true, fixedHeight = 40f };
 
         EditorGUILayout.BeginHorizontal();
-        var menuButtonStyle = new GUIStyle(GUI.skin.button) {fixedWidth = 100f};
+        var menuButtonStyle = new GUIStyle(GUI.skin.button) { fixedWidth = 100f };
         if (_pageNumber == 0)
             GUI.backgroundColor = new Color32(255, 255, 0, 170);
-        if (GUILayout.Button(LanguageModel.Main(_languageSelected), style: menuButtonStyle)) 
+        if (GUILayout.Button(LanguageModel.Main(_languageSelected), style: menuButtonStyle))
             _pageNumber = 0;
         GUI.backgroundColor = defaultBgColor;
         if (_pageNumber == 1)
@@ -92,6 +93,7 @@ public class SnapshotUtility : EditorWindow {
             _pageNumber = 1;
             GetContributors();
         }
+
         GUI.backgroundColor = defaultBgColor;
         EditorGUILayout.EndHorizontal();
 
@@ -104,19 +106,18 @@ public class SnapshotUtility : EditorWindow {
         var savedValueFile = new FileInfo(savedValueDir.FullName + "__savedValues.txt");
         if (!savedValueFile.Exists) savedValueFile.Create();
 
-        #region Page 1 (0) - Main Menu
+#region Page 1 (0) - Main Menu
 
         if (_pageNumber == 0) {
-
             EditorGUILayout.LabelField($"<size=15><b>{LanguageModel.GeneralOptions(_languageSelected)}</b></size>");
             _languageSelected = EditorGUILayout.Popup(LanguageModel.Language(_languageSelected), _languageSelected, _languageOptions);
-            
+
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            var savedValuesBtn = new GUIStyle(GUI.skin.button) {fixedWidth = _languageSelected == 3 ? 225f : 150f};
+            var savedValuesBtn = new GUIStyle(GUI.skin.button) { fixedWidth = _languageSelected == 3 ? 225f : 150f };
             if (GUILayout.Button(LanguageModel.LoadSavedValues(_languageSelected), style: savedValuesBtn)) {
                 var savedValues = File.ReadAllLines(savedValueFile.FullName);
-                if (savedValues == null || savedValues.Length == 0) {
+                if (savedValues.Length == 0) {
                     Debug.LogError(LogPrefix + LanguageModel.SaveFileIssue(_languageSelected));
                     EditorGUILayout.HelpBox(LanguageModel.SaveFileIssue(_languageSelected), MessageType.Error);
                     return;
@@ -132,7 +133,7 @@ public class SnapshotUtility : EditorWindow {
                     EditorGUILayout.HelpBox(LanguageModel.OldSaveFile(_languageSelected), MessageType.Error);
                     return;
                 }
-                
+
                 _isTransparent = bool.Parse(savedValues[0]);
                 _openFileDirectory = bool.Parse(savedValues[1]);
                 _openInDefaultImageViewer = bool.Parse(savedValues[2]);
@@ -145,25 +146,30 @@ public class SnapshotUtility : EditorWindow {
                 var date = savedValues[10].Split(':');
                 Debug.Log(LogPrefix + "Loaded Saved Values" + date[1].TrimStart(' ') + ":" + date[2] + ":" + date[3]);
             }
+
             EditorGUILayout.EndHorizontal();
-            
+
             EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField($"<size=15><b>{LanguageModel.CameraOptions(_languageSelected)}</b></size>");
+            _useSceneCamera = EditorGUILayout.ToggleLeft(LanguageModel.UseSceneCamera(_languageSelected), _useSceneCamera);
             EditorGUILayout.BeginHorizontal();
+            GUI.enabled = !_useSceneCamera;
             EditorGUILayout.LabelField(LanguageModel.SelectCamera(_languageSelected));
-            _camera = EditorGUILayout.ObjectField(_camera, typeof(Camera), true, null) as Camera;
+            _camera = EditorGUILayout.ObjectField(_useSceneCamera ? SceneView.lastActiveSceneView.camera : _camera, typeof(Camera), true, null) as Camera;
+            GUI.enabled = true;
             EditorGUILayout.EndHorizontal();
-            _cameraNameFromScene = _camera == null ? "null" : _camera.gameObject.name;
-            
+            _cameraNameFromScene = !_camera ? "null" : _camera.gameObject.name;
+
             _isTransparent = EditorGUILayout.ToggleLeft(LanguageModel.HideSkybox(_languageSelected), _isTransparent);
             var typeRect = GUILayoutUtility.GetLastRect();
             GUI.Label(new Rect(typeRect.x - 80, typeRect.y, typeRect.width, typeRect.height), new GUIContent("", LanguageModel.SkyboxTooltip(_languageSelected)));
-        
+
             _openFileDirectory = EditorGUILayout.ToggleLeft(LanguageModel.OpenInExplorer(_languageSelected), _openFileDirectory);
             _openInDefaultImageViewer = EditorGUILayout.ToggleLeft(LanguageModel.OpenInViewer(_languageSelected), _openInDefaultImageViewer);
-        
+
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField($"<size=15><b>{LanguageModel.ResolutionTypeSize(_languageSelected)}</b></size>");
-            
+
             EditorGUI.BeginChangeCheck();
             _resolutionSelected = EditorGUILayout.Popup(LanguageModel.ResolutionType(_languageSelected), _resolutionSelected, _resolutionOptions);
             switch (_resolutionSelected) {
@@ -176,36 +182,46 @@ public class SnapshotUtility : EditorWindow {
                         EditorGUILayout.HelpBox(LanguageModel.HighResWarning(_languageSelected), MessageType.Warning);
                         return;
                     }
+
                     break;
                 case 1:
                     _resolutionMultiplier = 1;
                     _standardResSelected = EditorGUILayout.Popup(LanguageModel.ResPresets(_languageSelected), _standardResSelected, _standardResOptions);
                     switch (_standardResSelected) {
-                        case 0: // 480p
+                        case 0: // 240p
+                            _width = 320;
+                            _height = 240;
+                            break;
+                        case 1: // 360p
+                            _width = 640;
+                            _height = 360;
+                            break;
+                        case 2: // 480p
                             _width = 720;
                             _height = 480;
                             break;
-                        case 1: // 720p
+                        case 3: // 720p
                             _width = 1280;
                             _height = 720;
                             break;
-                        case 2: // 1080p
+                        case 4: // 1080p
                             _width = 1920;
                             _height = 1080;
                             break;
-                        case 3: // 1440p
+                        case 5: // 1440p
                             _width = 2560;
                             _height = 1440;
                             break;
-                        case 4: // 4K
+                        case 6: // 4K
                             _width = 3840;
                             _height = 2160;
                             break;
-                        case 5: // 8K
+                        case 7: // 8K
                             _width = 7680;
                             _height = 4320;
                             break;
                     }
+
                     break;
                 case 2: // VRChat
                     _width = 1200;
@@ -216,7 +232,7 @@ public class SnapshotUtility : EditorWindow {
                     _height = 512;
                     break;
             }
-            
+
             EditorGUI.EndChangeCheck();
 
             if (_resolutionSelected != 0) {
@@ -224,7 +240,7 @@ public class SnapshotUtility : EditorWindow {
                 _height = EditorGUILayout.IntField(LanguageModel.Height(_languageSelected), _height) * _resolutionMultiplier;
             }
 
-            if (_resolutionSelected == 2 || _resolutionSelected == 3) {
+            if (_resolutionSelected is 2 or 3) {
                 EditorGUILayout.BeginHorizontal();
                 _resolutionMultiplier = EditorGUILayout.IntSlider(label: LanguageModel.Multiplier(_languageSelected), _resolutionMultiplier, 1, 16);
                 EditorGUILayout.EndHorizontal();
@@ -268,16 +284,18 @@ public class SnapshotUtility : EditorWindow {
                                     $"  4. {LanguageModel.BoxPressButton(_languageSelected)}" +
                                     $"{(_openFileDirectory ? $"\n  5a. {LanguageModel.BoxFileExplorer(_languageSelected)}" : "")}" +
                                     $"{(_openInDefaultImageViewer ? $"\n  5b. {LanguageModel.BoxImageViewer(_languageSelected)}" : "")}", MessageType.Info);
-            
+
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField($"<size=15>{LanguageModel.ImageResolutionOutcome(_languageSelected)} {_width}x{_height}</size>");
             if (_width > 11999 || _height > 11999) {
                 EditorGUILayout.HelpBox(LanguageModel.HighResWarning(_languageSelected), MessageType.Warning);
             }
+
             var playModeButtons = new GUIStyle(GUI.skin.button) { fixedWidth = 150f, fixedHeight = 30f };
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            
+
+            EditorGUILayout.Space();
             GUI.backgroundColor = new Color32(0, 0, 255, 255);
             if (GUILayout.Button(LanguageModel.TakeSnapshotButton(_languageSelected), playModeButtons)) {
                 var bytes = CaptureSnapshot(_isTransparent, _width, _height, _camera);
@@ -299,51 +317,88 @@ public class SnapshotUtility : EditorWindow {
                     Debug.Log(LogPrefix + $"Opening \"{filename}\"");
                 }
             }
+
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
 
             return;
         }
 
-        #endregion
+#endregion
 
-        #region Page 2 (1) - About
+#region Page 2 (1) - About
 
         EditorGUILayout.LabelField($"<size=15><b>{LanguageModel.About(_languageSelected)}</b></size>");
-        
+
         EditorGUILayout.LabelField($"<size=12><b>{LanguageModel.Version(_languageSelected)}:</b> <color=#EECCE0>{Version}</color>{(_updateAvailable ? $" - <color=red>{LanguageModel.UpdateAvailable(_languageSelected)}</color> - <b>v{_newVersionString}</b>" : "")}</size>");
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button(LanguageModel.CheckForUpdateButton(_languageSelected))) 
-            CheckForUpdate();
 
         if (_updateAvailable) {
-            if (GUILayout.Button(LanguageModel.OpenBoothPage(_languageSelected))) 
+            EditorGUILayout.BeginHorizontal();
+            GUI.enabled = false;
+            if (GUILayout.Button(LanguageModel.CheckForUpdateButton(_languageSelected))) { }
+            GUI.enabled = true;
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button(LanguageModel.OpenBoothPage(_languageSelected)))
                 Application.OpenURL("https://mintylabs.booth.pm/items/4949097");
+            if (GUILayout.Button(LanguageModel.OpenGumroadPage(_languageSelected)))
+                Application.OpenURL("https://mintylabs.gumroad.com/l/ScreenshotUtility");
             if (GUILayout.Button(LanguageModel.OpenGitHubPage(_languageSelected)))
                 Application.OpenURL("https://github.com/Minty-Labs/Unity-Tools/releases");
         }
-        EditorGUILayout.EndHorizontal();
+        else {
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button(LanguageModel.CheckForUpdateButton(_languageSelected)))
+                CheckForUpdate();
+        }
         
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.Space(5);
         EditorGUILayout.LabelField($"<size=12>{LanguageModel.Developer(_languageSelected)}: <color=#9fffe3>Mint</color>Lily</size>");
         EditorGUILayout.BeginHorizontal();
         GUI.backgroundColor = new Color32(0, 255, 170, 255);
         if (GUILayout.Button("Minty Labs"))
             Application.OpenURL("https://mintylabs.dev/");
-        GUI.backgroundColor = new Color32(252, 77, 80, 255);
-        if (GUILayout.Button("Booth"))
-            Application.OpenURL("https://mintylabs.booth.pm/");
-        GUI.backgroundColor = new Color32(29, 155, 240, 255);
-        if (GUILayout.Button("X (Twitter)"))
-            Application.OpenURL("https://x.com/MintLiIy");
+
         GUI.backgroundColor = new Color32(0, 0, 0, 255);
         if (GUILayout.Button("GitHub"))
             Application.OpenURL("https://github.com/MintLily");
+
+        GUI.backgroundColor = new Color32(29, 155, 240, 255);
+        if (GUILayout.Button("X (Twitter)"))
+            Application.OpenURL("https://x.com/MintLiIy");
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUI.backgroundColor = new Color32(252, 77, 80, 255);
+        if (GUILayout.Button("Booth"))
+            Application.OpenURL("https://mintylabs.booth.pm/");
+
+        GUI.backgroundColor = new Color32(255, 144, 232, 255);
+        if (GUILayout.Button("Gumroad"))
+            Application.OpenURL("https://mintylabs.gumroad.com/");
+
+        GUI.backgroundColor = new Color32(12, 14, 29, 255);
+        if (GUILayout.Button("Jinxxy"))
+            Application.OpenURL("https://jinxxy.com/MintLily");
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+
         GUI.backgroundColor = new Color32(0, 185, 254, 255);
         if (GUILayout.Button("Ko-fi (Donate)"))
             Application.OpenURL("https://ko-fi.com/MintLily");
+
+        GUI.backgroundColor = new Color32(241, 101, 82, 255);
+        if (GUILayout.Button("Patreon (Donate)"))
+            Application.OpenURL("https://www.patreon.com/MintLily");
+
         EditorGUILayout.EndHorizontal();
-        
+
         var content = new GUIContent((Texture)AssetDatabase.LoadAssetAtPath("Assets/Minty Labs/Snapshot Utility/tex/refresh.png", typeof(Texture)));
         EditorGUILayout.Space(10);
         GUI.backgroundColor = new Color32(0, 0, 0, 0);
@@ -353,8 +408,9 @@ public class SnapshotUtility : EditorWindow {
                 GetContributors();
             GUILayout.FlexibleSpace();
         }
+
         GUI.backgroundColor = new Color32(0, 0, 0, 55);
-        EditorGUILayout.BeginVertical(new GUIStyle(GUI.skin.window) { padding = new RectOffset(10, 10, 10, 10)});
+        EditorGUILayout.BeginVertical(new GUIStyle(GUI.skin.window) { padding = new RectOffset(10, 10, 10, 10) });
         EditorGUILayout.LabelField($"<size=12><b>{LanguageModel.English(_languageSelected)} (English)</b></size>");
         EditorGUILayout.LabelField("Lily");
         EditorGUILayout.LabelField($"<size=12><b>{LanguageModel.Japanese(_languageSelected)} (日本語)</b></size>");
@@ -365,11 +421,11 @@ public class SnapshotUtility : EditorWindow {
         EditorGUILayout.LabelField(_russianContributors ?? "null");
         EditorGUILayout.EndVertical();
 
-        #endregion
+#endregion
     }
 
     private static byte[] CaptureSnapshot(bool isTransparent, int width, int height, Camera camera) {
-        if (camera == null) {
+        if (!camera) {
             Debug.LogError(LogPrefix + LanguageModel.NoCameraError(_languageSelected));
             EditorGUILayout.HelpBox(LanguageModel.NoCameraError(_languageSelected), MessageType.Error);
             return null;
@@ -384,7 +440,7 @@ public class SnapshotUtility : EditorWindow {
             camera.backgroundColor = new Color(0, 0, 0, 0);
             camera.nearClipPlane = 0.01f;
             var transSnapshot = new Texture2D(width, height, TextureFormat.ARGB32, false);
-            
+
             camera.Render();
             RenderTexture.active = transRenderTex;
             transSnapshot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
@@ -394,15 +450,15 @@ public class SnapshotUtility : EditorWindow {
             camera.targetTexture = null;
             RenderTexture.active = null;
             DestroyImmediate(transRenderTex);
-            
+
             return transSnapshot.EncodeToPNG();
         }
-        
+
         var normRenderTex = new RenderTexture(width, height, (int)TextureFormat.ARGB32);
         camera.targetTexture = normRenderTex;
         camera.nearClipPlane = 0.01f;
         var normSnapshot = new Texture2D(width, height, TextureFormat.ARGB32, false);
-        
+
         camera.Render();
         RenderTexture.active = normRenderTex;
         normSnapshot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
@@ -410,10 +466,10 @@ public class SnapshotUtility : EditorWindow {
         camera.targetTexture = null;
         RenderTexture.active = null;
         DestroyImmediate(normRenderTex);
-            
+
         return normSnapshot.EncodeToPNG();
     }
-    
+
     private static string ScreenshotName(string width, string height) => $"{Application.productName}_snapshot_{width}x{height}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.png";
 
     private static void UpdateFolderStructure() {
