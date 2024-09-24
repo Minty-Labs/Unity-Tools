@@ -93,6 +93,13 @@
 </ul>
 
 <h1>Updates</h1>
+<b>2024-09-24: v1.0.2</b>
+<p>
+  <ul>
+    <li>Small code/logic edits</li>
+    <li>Updated About page layout & links</li>
+  </ul>
+</p>
 <b>2024-03-02: v1.0.1</b>
 <p>
   <ul>

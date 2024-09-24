@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 
 public class ZipImporter : EditorWindow {
-    private const string Version = "1.0.1";
+    private const string Version = "1.0.2";
     private const string LogPrefix = "[<color=#9fffe3>ZipArchive Importer</color>] ";
     private static readonly string ProjectUserAgent = $"ZipArchive Importer/{Version} Internal UnityWebRequest";
     private int _pageNumber;
@@ -63,6 +63,7 @@ public class ZipImporter : EditorWindow {
             _pageNumber = 0;
             OnDestroy();
         }
+
         GUI.backgroundColor = defaultBgColor;
         if (_pageNumber == 1)
             GUI.backgroundColor = new Color32(255, 255, 0, 170);
@@ -76,7 +77,7 @@ public class ZipImporter : EditorWindow {
         EditorGUILayout.Separator();
         EditorGUILayout.Space();
 
-        #region Page 1 (0) - Main Menu
+#region Page 1 (0) - Main Menu
 
         if (_pageNumber == 0) {
             if (!_activelyImporting) {
@@ -90,6 +91,7 @@ public class ZipImporter : EditorWindow {
                     Debug.Log("Importing Package Button Press");
                     ImportWithGui();
                 }
+
                 EditorGUILayout.Separator();
                 EditorGUILayout.EndHorizontal();
 
@@ -122,7 +124,7 @@ public class ZipImporter : EditorWindow {
                     window.UpdateGui(file.FullName, true);
                     window.Show();
                 }
-                
+
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.Space(20);
                 */
@@ -147,7 +149,7 @@ public class ZipImporter : EditorWindow {
                     GUI.backgroundColor = defaultBgColor;
                     return;
                 }
-                
+
                 EditorGUILayout.LabelField("<size=15><b>Information</b></size>");
                 EditorGUILayout.HelpBox("  If \"Import\" is checked, the package will be imported\n" +
                                         "  If \"Interactive\" is checked, the unity window with the package contents will show for each package", MessageType.Info);
@@ -194,9 +196,9 @@ public class ZipImporter : EditorWindow {
                 }
 
                 EditorGUILayout.EndHorizontal();
-                
+
                 EditorGUILayout.EndScrollView();
-                
+
                 EditorGUILayout.BeginHorizontal();
                 GUI.backgroundColor = new Color32(0, 0, 255, 170);
                 if (GUILayout.Button("Import", style: importBtn)) {
@@ -208,6 +210,7 @@ public class ZipImporter : EditorWindow {
                         var zipEntry = _zipArchive.Entries.Single(entry => entry.FullName == _zipContents[i]);
                         _importQueue.Enqueue(() => OpenZip(zipEntry.FullName, flag, zipEntry));
                     }
+
                     for (var i = 0; i < _zipContents.Count; i++) {
                         var flag = _interactiveCheckBoxes[i];
                         if (!_importingCheckBoxes[i] || flag) continue;
@@ -224,29 +227,38 @@ public class ZipImporter : EditorWindow {
 
                 DoNextImport();
             }
+
             return;
         }
 
+#endregion
 
-        #endregion
-
-        #region Page 2 (1) - About
+#region Page 2 (1) - About
 
         //if (_pageNumber == 1) return;
         EditorGUILayout.LabelField("<size=15><b>About</b></size>");
 
         EditorGUILayout.LabelField($"<size=12><b>Version:</b> <color=#EECCE0>{Version}</color>{(_updateAvailable ? $" - <color=red>Update Available</color> - v{_newVersionString}" : "")}</size>");
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Check For Update"))
-            CheckForUpdate();
 
         if (_updateAvailable) {
+            EditorGUILayout.BeginHorizontal();
+            GUI.enabled = false;
+            if (GUILayout.Button("Check for Update")) { }
+            GUI.enabled = true;
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Open Booth Page"))
                 Application.OpenURL("https://mintylabs.booth.pm/items/5527952");
-            if (GUILayout.Button("Open GitHub Releases Page"))
+            if (GUILayout.Button("Open Gumroad Page"))
+                Application.OpenURL("https://mintylabs.gumroad.com/l/ScreenshotUtility");
+            if (GUILayout.Button("Open GitHub Page"))
                 Application.OpenURL("https://github.com/Minty-Labs/Unity-Tools/releases");
         }
-
+        else {
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Check for Update"))
+                CheckForUpdate();
+        }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space(5);
@@ -255,18 +267,43 @@ public class ZipImporter : EditorWindow {
         GUI.backgroundColor = new Color32(0, 255, 170, 255);
         if (GUILayout.Button("Minty Labs"))
             Application.OpenURL("https://mintylabs.dev/");
-        GUI.backgroundColor = new Color32(252, 77, 80, 255);
-        if (GUILayout.Button("Booth"))
-            Application.OpenURL("https://mintylabs.booth.pm/");
-        GUI.backgroundColor = new Color32(29, 155, 240, 255);
-        if (GUILayout.Button("X (Twitter)"))
-            Application.OpenURL("https://x.com/MintLiIy");
+
         GUI.backgroundColor = new Color32(0, 0, 0, 255);
         if (GUILayout.Button("GitHub"))
             Application.OpenURL("https://github.com/MintLily");
+
+        GUI.backgroundColor = new Color32(29, 155, 240, 255);
+        if (GUILayout.Button("X (Twitter)"))
+            Application.OpenURL("https://x.com/MintLiIy");
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+
+        GUI.backgroundColor = new Color32(252, 77, 80, 255);
+        if (GUILayout.Button("Booth"))
+            Application.OpenURL("https://mintylabs.booth.pm/");
+
+        GUI.backgroundColor = new Color32(255, 144, 232, 255);
+        if (GUILayout.Button("Gumroad"))
+            Application.OpenURL("https://mintylabs.gumroad.com/");
+
+        GUI.backgroundColor = new Color32(12, 14, 29, 255);
+        if (GUILayout.Button("Jinxxy"))
+            Application.OpenURL("https://jinxxy.com/MintLily");
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+
         GUI.backgroundColor = new Color32(0, 185, 254, 255);
         if (GUILayout.Button("Ko-fi (Donate)"))
             Application.OpenURL("https://ko-fi.com/MintLily");
+
+        GUI.backgroundColor = new Color32(241, 101, 82, 255);
+        if (GUILayout.Button("Patreon (Donate)"))
+            Application.OpenURL("https://www.patreon.com/MintLily");
+
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space(10);
@@ -280,7 +317,7 @@ public class ZipImporter : EditorWindow {
         EditorGUILayout.LabelField("Elly, Penny, Emily, Myrkur");
         EditorGUILayout.EndVertical();
 
-        #endregion
+#endregion
     }
 
     private static void OpenZip(string name, bool interactive, ZipArchiveEntry archiveEntry) {
@@ -373,6 +410,7 @@ public class ZipImporter : EditorWindow {
                             OpenZip(entry.FullName, interactive, entry));
                     }
                 }
+
                 break;
             case ".unitypackage":
                 _activelyImporting = true;
@@ -383,7 +421,7 @@ public class ZipImporter : EditorWindow {
         }
     }
 
-    private void EventFailureMethod(string name, string msg) => ImportEndEvent(name);
+    private void EventFailureMethod(string eventName, string msg) => ImportEndEvent(eventName);
 
     private void ImportEndEvent(string nameOfPackage) {
         AssetDatabase.importPackageCompleted -= ImportEndEvent;
