@@ -2,9 +2,9 @@
 <p>Created back in late 2018, this is an updated version for using a unity camera to save it's view as an image. From there, you can do whatever you want.</p>
 
 <h1>Download</h1>
-<p>Head to <a href="https://mintylabs.booth.pm/items/4949097">Booth</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
+<p>Head to <a href="https://mintylabs.booth.pm/items/4949097">Booth</a> or <a href="https://mintylabs.gumroad.com/l/ScreenshotUtility">Gumroad</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
 
-<h1>Features</h1>
+<h2>Features</h2>
 <ul>
   <li>
     There are four image resolution size options. [Custom, Normal, VRChat, ChilloutVR]
@@ -20,7 +20,7 @@
   <li>Save & Load custom settings</li>
 </ul>
 
-<h1>Languages</h1>
+<h2>Languages</h2>
 <p>
   <ul>
     <li>English
@@ -47,7 +47,7 @@
   </ul>
 </p>
 
-<h1>Updates</h1>
+<h2>Updates</h2>
 <b>2024-09-24: v1.3.0</b>
 <p>
   <ul>
@@ -82,16 +82,16 @@
 <i>Inspired by <a href="https://goze.booth.pm/items/4571505" target="_blank">Goze's Project</a></i>
 </p>
 
-<h1>Download</h1>
-<p>Head to <a href="https://mintylabs.booth.pm/items/5527952">Booth</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
+<h2>Download</h2>
+<p>Head to <a href="https://mintylabs.booth.pm/items/5527952">Booth</a> or <a href="https://mintylabs.gumroad.com/l/ZipArchiveImporter">Gumroad</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
 
-<h1>Features</h1>
+<h2>Features</h2>
 <ul>
   <li>Import .zip files</li>
   <li>Import .unitypackage files (like normal)</li>
 </ul>
 
-<h1>Updates</h1>
+<h2>Updates</h2>
 <b>2024-09-24: v1.0.2</b>
 <p>
   <ul>
@@ -118,16 +118,16 @@
 <i>Inspired by ArhianaDev</i>
 </p>
 
-<h1>Download</h1>
+<h2>Download</h2>
 <p>Head to <a href="https://mintylabs.booth.pm/items/6130982">Booth</a> or <a href="https://mintylabs.gumroad.com/l/AnimationToggleGenerator">Gumroad</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> or <a href="https://jinxxy.com/MintLily/AnimationToggleGenerator">Jinxxy</a> to download.</p>
 
-<h1>Features</h1>
+<h2>Features</h2>
 <ul>
   <li>Manually set menu toggle name, separate FXLayer, ExpressionsMenu, and ExpressionParameter files.</li>
   <li>Auto detection of Write Defaults</li>
 </ul>
 
-<h1>Updates</h1>
+<h2>Updates</h2>
 <b>2024-09-29: v1.0.0</b>
 <p>
   <ul>
