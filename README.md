@@ -55,7 +55,6 @@
     <li>Added resolution presets: 240p & 360p</li>
     <li>Small code/logic edits</li>
     <li>Updated About page layout & links</li>
-    <li></li>
   </ul>
 </p>
 <b>2024-03-02: v1.2.0</b>
@@ -107,6 +106,29 @@
   </ul>
 </p>
 <b>2024-03-02: v1.0.0</b>
+<p>
+  <ul>
+    <li>Initial Release</li>
+  </ul>
+</p>
+
+<h1>Animation Toggle Generator</h1>
+<p>Create simple object toggles on your VRChat avatar with ease.
+<br><br>
+<i>Inspired by ArhianaDev</i>
+</p>
+
+<h1>Download</h1>
+<p>Head to <a href="https://mintylabs.booth.pm/items/6130982">Booth</a> or <a href="https://mintylabs.gumroad.com/l/AnimationToggleGenerator">Gumroad</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> or <a href="https://jinxxy.com/MintLily/AnimationToggleGenerator">Jinxxy</a> to download.</p>
+
+<h1>Features</h1>
+<ul>
+  <li>Manually set menu toggle name, separate FXLayer, ExpressionsMenu, and ExpressionParameter files.</li>
+  <li>Auto detection of Write Defaults</li>
+</ul>
+
+<h1>Updates</h1>
+<b>2024-09-29: v1.0.0</b>
 <p>
   <ul>
     <li>Initial Release</li>
