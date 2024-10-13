@@ -128,6 +128,13 @@
 </ul>
 
 <h2>Updates</h2>
+<b>2024-10-13: v1.0.1</b>
+<p>
+  <ul>
+    <li>Fixed Version Check URL being incorrect</li>
+  </ul>
+</p>
+
 <b>2024-09-29: v1.0.0</b>
 <p>
   <ul>

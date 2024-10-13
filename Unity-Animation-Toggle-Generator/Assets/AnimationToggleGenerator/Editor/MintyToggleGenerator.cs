@@ -10,7 +10,7 @@ using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 
 public class MintyToggleGenerator : EditorWindow {
-    private const string Version = "1.0.0";
+    private const string Version = "1.0.1";
     private const string LogPrefix = "[<color=#9fffe3>MintyToggle Generator</color>] ";
     private static readonly string ProjectUserAgent = $"MintyToggleGenerator/{Version} Internal UnityWebRequest";
     private static bool _updateAvailable;
@@ -48,7 +48,7 @@ public class MintyToggleGenerator : EditorWindow {
         Debug.Log(LogPrefix + "Checking for updates...");
         var wc = new WebClient();
         wc.Headers.Add("User-Agent", ProjectUserAgent);
-        _newVersionString = wc.DownloadString("https://raw.githubusercontent.com/Minty-Labs/Unity-Tools/main/Animation-Toggle-Generator/Remote/version.txt");
+        _newVersionString = wc.DownloadString("https://raw.githubusercontent.com/Minty-Labs/Unity-Tools/refs/heads/main/Unity-Animation-Toggle-Generator/Remote/version.txt");
         _updateAvailable = _newVersionString != Version;
         Debug.Log(LogPrefix + (_updateAvailable ? "Update Available" : "No Update Available"));
         wc.Dispose();
@@ -546,7 +546,7 @@ public class MintyToggleGenerator : EditorWindow {
     // Allows you get the current folder that is opened in the project window
     private static string GetSelectedPathOrFallback() {
         var path = "Assets";
-		
+        
         foreach (var obj in Selection.GetFiltered(typeof(Object), SelectionMode.Assets)) {
             path = AssetDatabase.GetAssetPath(obj);
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) continue;
