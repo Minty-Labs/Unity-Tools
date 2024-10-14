@@ -2,7 +2,7 @@
 <p>Created back in late 2018, this is an updated version for using a unity camera to save it's view as an image. From there, you can do whatever you want.</p>
 
 <h1>Download</h1>
-<p>Head to <a href="https://mintylabs.booth.pm/items/4949097">Booth</a> or <a href="https://mintylabs.gumroad.com/l/ScreenshotUtility">Gumroad</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
+<p>Head to <a href="https://mintylabs.booth.pm/items/4949097">Booth</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
 
 <h2>Features</h2>
 <ul>
@@ -83,7 +83,7 @@
 </p>
 
 <h2>Download</h2>
-<p>Head to <a href="https://mintylabs.booth.pm/items/5527952">Booth</a> or <a href="https://mintylabs.gumroad.com/l/ZipArchiveImporter">Gumroad</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
+<p>Head to <a href="https://mintylabs.booth.pm/items/5527952">Booth</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> to download.</p>
 
 <h2>Features</h2>
 <ul>
@@ -119,7 +119,7 @@
 </p>
 
 <h2>Download</h2>
-<p>Head to <a href="https://mintylabs.booth.pm/items/6130982">Booth</a> or <a href="https://mintylabs.gumroad.com/l/AnimationToggleGenerator">Gumroad</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> or <a href="https://jinxxy.com/MintLily/AnimationToggleGenerator">Jinxxy</a> to download.</p>
+<p>Head to <a href="https://mintylabs.booth.pm/items/6130982">Booth</a> or <a href="https://github.com/Minty-Labs/Unity-Tools/releases">Releases</a> or <a href="https://jinxxy.com/MintLily/AnimationToggleGenerator">Jinxxy</a> to download.</p>
 
 <h2>Features</h2>
 <ul>
