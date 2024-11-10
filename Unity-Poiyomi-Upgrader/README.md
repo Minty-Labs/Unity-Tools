@@ -2,7 +2,7 @@
 <p>
   Have you ever wanted a quick and easy was to update all your materials to your freshly imported Poiyomi Toon or Pro shader update? This tool is aimed to assist you in that. This will let you upgrade your material from the "Old Version" to the current version.<br>
   Example:<br>
-  <code>'.poiyomi/Older Versions/9.1/Poiyomi Pro' will be upgraded to '.poiyomi/Poiyomi Pro'
+  <code>'.poiyomi/Older Versions/9.1/Poiyomi Pro' will be upgraded to '.poiyomi/Poiyomi Pro'</code>
 </p>
 
 <h1>Download</h1>
