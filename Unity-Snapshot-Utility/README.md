@@ -48,6 +48,21 @@
 </p>
 
 <h1>Updates</h1>
+<b>2024-11-30: v1.4.0</b>
+<p>
+  <ul>
+    <li>Fixed background being transparent when the "Hide Skybox" toggle is unchecked</li>
+  </ul>
+</p>
+<b>2024-09-24: v1.3.0</b>
+<p>
+  <ul>
+    <li>Added an option to use your Scene View as a camera</li>
+    <li>Added resolution presets: 240p & 360p</li>
+    <li>Small code/logic edits</li>
+    <li>Updated About page layout & links</li>
+  </ul>
+</p>
 <b>2024-03-02: v1.2.0</b>
 <p>
   <ul>

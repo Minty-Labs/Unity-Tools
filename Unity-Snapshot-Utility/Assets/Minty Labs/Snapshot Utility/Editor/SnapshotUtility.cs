@@ -8,7 +8,7 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class SnapshotUtility : EditorWindow {
-    private const string Version = "1.3.0";
+    private const string Version = "1.4.0";
     private const string SaveFileVersion = "2";
     private const string LogPrefix = "[<color=#9fffe3>MintySnapshot Utility</color>] ";
     private static readonly string ProjectUserAgent = $"MintySnapshot Utility/{Version} Internal UnityWebRequest";
@@ -240,7 +240,7 @@ public class SnapshotUtility : EditorWindow {
                 _height = EditorGUILayout.IntField(LanguageModel.Height(_languageSelected), _height) * _resolutionMultiplier;
             }
 
-            if (_resolutionSelected is 2 or 3) {
+            if (_resolutionSelected is 4 or 5) {
                 EditorGUILayout.BeginHorizontal();
                 _resolutionMultiplier = EditorGUILayout.IntSlider(label: LanguageModel.Multiplier(_languageSelected), _resolutionMultiplier, 1, 16);
                 EditorGUILayout.EndHorizontal();
@@ -341,8 +341,8 @@ public class SnapshotUtility : EditorWindow {
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button(LanguageModel.OpenBoothPage(_languageSelected)))
                 Application.OpenURL("https://mintylabs.booth.pm/items/4949097");
-            if (GUILayout.Button(LanguageModel.OpenGumroadPage(_languageSelected)))
-                Application.OpenURL("https://mintylabs.gumroad.com/l/ScreenshotUtility");
+            // if (GUILayout.Button(LanguageModel.OpenGumroadPage(_languageSelected)))
+            //     Application.OpenURL("https://mintylabs.gumroad.com/l/ScreenshotUtility");
             if (GUILayout.Button(LanguageModel.OpenGitHubPage(_languageSelected)))
                 Application.OpenURL("https://github.com/Minty-Labs/Unity-Tools/releases");
         }
@@ -368,6 +368,10 @@ public class SnapshotUtility : EditorWindow {
         GUI.backgroundColor = new Color32(29, 155, 240, 255);
         if (GUILayout.Button("X (Twitter)"))
             Application.OpenURL("https://x.com/MintLiIy");
+        
+        GUI.backgroundColor = new Color32(0, 133, 255, 255);
+        if (GUILayout.Button("Bluesky"))
+            Application.OpenURL("https://bsky.app/profile/lily.mintylabs.dev");
 
         EditorGUILayout.EndHorizontal();
 
@@ -376,11 +380,13 @@ public class SnapshotUtility : EditorWindow {
         GUI.backgroundColor = new Color32(252, 77, 80, 255);
         if (GUILayout.Button("Booth"))
             Application.OpenURL("https://mintylabs.booth.pm/");
-
+        
+        GUI.enabled = false;
         GUI.backgroundColor = new Color32(255, 144, 232, 255);
         if (GUILayout.Button("Gumroad"))
             Application.OpenURL("https://mintylabs.gumroad.com/");
 
+        GUI.enabled = true;
         GUI.backgroundColor = new Color32(12, 14, 29, 255);
         if (GUILayout.Button("Jinxxy"))
             Application.OpenURL("https://jinxxy.com/MintLily");
@@ -430,44 +436,32 @@ public class SnapshotUtility : EditorWindow {
             EditorGUILayout.HelpBox(LanguageModel.NoCameraError(_languageSelected), MessageType.Error);
             return null;
         }
-
-        if (isTransparent) {
-            var transRenderTex = new RenderTexture(width, height, (int)TextureFormat.ARGB32);
-            var normalCamClearFlags = camera.clearFlags;
-            var normalCamBgColor = camera.backgroundColor;
-            camera.targetTexture = transRenderTex;
-            camera.clearFlags = CameraClearFlags.Nothing;
-            camera.backgroundColor = new Color(0, 0, 0, 0);
-            camera.nearClipPlane = 0.01f;
-            var transSnapshot = new Texture2D(width, height, TextureFormat.ARGB32, false);
-
-            camera.Render();
-            RenderTexture.active = transRenderTex;
-            transSnapshot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-
-            camera.backgroundColor = normalCamBgColor;
-            camera.clearFlags = normalCamClearFlags;
-            camera.targetTexture = null;
-            RenderTexture.active = null;
-            DestroyImmediate(transRenderTex);
-
-            return transSnapshot.EncodeToPNG();
-        }
-
-        var normRenderTex = new RenderTexture(width, height, (int)TextureFormat.ARGB32);
-        camera.targetTexture = normRenderTex;
+        
+        var newRenderTex = new RenderTexture(width, height, (int)(isTransparent ? TextureFormat.ARGB32 : TextureFormat.RGB24));
+        var currentHdrSetting = camera.allowHDR;
+        var currentCamClearFlags = camera.clearFlags;
+        var currentCamBgColor = camera.backgroundColor;
+        
+        camera.targetTexture = newRenderTex;
+        camera.backgroundColor = new Color(0, 0, 0, isTransparent ? 0 : 1);
         camera.nearClipPlane = 0.01f;
-        var normSnapshot = new Texture2D(width, height, TextureFormat.ARGB32, false);
-
+        if (!currentHdrSetting)
+            camera.allowHDR = true;
+        
+        var snapshotTexture = new Texture2D(width, height, isTransparent ? TextureFormat.ARGB32 : TextureFormat.RGB24, false);
         camera.Render();
-        RenderTexture.active = normRenderTex;
-        normSnapshot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        RenderTexture.active = newRenderTex;
+        snapshotTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
 
+        // Reset camera settings
+        camera.backgroundColor = currentCamBgColor;
+        camera.clearFlags = currentCamClearFlags;
         camera.targetTexture = null;
         RenderTexture.active = null;
-        DestroyImmediate(normRenderTex);
+        camera.allowHDR = currentHdrSetting;
+        DestroyImmediate(newRenderTex);
 
-        return normSnapshot.EncodeToPNG();
+        return snapshotTexture.EncodeToPNG();
     }
 
     private static string ScreenshotName(string width, string height) => $"{Application.productName}_snapshot_{width}x{height}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.png";

@@ -48,6 +48,12 @@
 </p>
 
 <h2>Updates</h2>
+<b>2024-11-30: v1.4.0</b>
+<p>
+  <ul>
+    <li>Fixed background being transparent when the "Hide Skybox" toggle is unchecked</li>
+  </ul>
+</p>
 <b>2024-09-24: v1.3.0</b>
 <p>
   <ul>
@@ -134,7 +140,6 @@
     <li>Fixed Version Check URL being incorrect</li>
   </ul>
 </p>
-
 <b>2024-09-29: v1.0.0</b>
 <p>
   <ul>
